@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор стратегии</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            padding: 40px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 2px solid #e0e0e0;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: #4CAF50;
+        }
+
+        .card.selected {
+            border-color: #4CAF50;
+            background: #f0fff4;
+        }
+
+        .radio-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        input[type="radio"] {
+            transform: scale(1.3);
+        }
+
+        .field {
+            margin-top: 15px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px; /* 🔥 увеличили */
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 14px 26px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Выбери и отредактируй стратегию</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+        <div class="card" onclick="selectCard('{{ field.name }}')" id="card-{{ field.name }}">
+
+            <div class="radio-row">
+                <strong>Стратегия {{ forloop.counter }}</strong>
+                <input type="radio" name="selected" value="{{ field.name }}" id="radio-{{ field.name }}">
+            </div>
+
+            <div class="field">
+                <label>Описание стратегии</label>
+                <textarea
+    class="auto-resize"
+    name="{{ field.name }}"
+    onclick="event.stopPropagation()"
+>{{ field.value }}</textarea>
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-btn">Продолжить</button>
+</form>
+
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const textareas = document.querySelectorAll('.auto-resize');
+
+        textareas.forEach(textarea => {
+            autoResize(textarea);
+
+            textarea.addEventListener('input', function () {
+                autoResize(this);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

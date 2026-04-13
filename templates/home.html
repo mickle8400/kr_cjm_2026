@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <h2 class="mb-4">Опиши ситуацию</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Тип ситуации</label>
+            {{ form.type }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            {{ form.description }}
+        </div>
+
+        <button class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+{% endblock %}

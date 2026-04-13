@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Шаги стратегии</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            padding: 40px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .step-card {
+            display: block;
+            background: #fff;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .step-card:hover {
+            border-color: #4CAF50;
+        }
+
+        .step-card.selected {
+            border-color: #4CAF50;
+            background: #f0fff4;
+        }
+
+        .checkbox-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-row strong {
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>План реализации стратегии</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for step in steps %}
+        <div class="step-card" onclick="toggleStep({{ step.id }})" id="card-{{ step.id }}">
+
+            <div class="checkbox-row">
+                <strong>Шаг {{ forloop.counter }}</strong>
+                <input type="checkbox" name="selected_steps" value="{{ step.id }}" id="check-{{ step.id }}">
+            </div>
+
+            <div class="field">
+                <label>Название</label>
+                <input type="text" name="title_{{ step.id }}" value="{{ step.title }}">
+            </div>
+
+            <div class="field">
+                <label>Описание</label>
+                <textarea name="desc_{{ step.id }}">{{ step.description }}</textarea>
+            </div>
+
+            <div class="field">
+                <label>Ответственный</label>
+                <input type="text" name="resp_{{ step.id }}" value="{{ step.responsible }}">
+            </div>
+
+            <div class="field">
+                <label>Срок</label>
+                <input type="text" name="dur_{{ step.id }}" value="{{ step.duration }}">
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-btn">Сохранить и завершить</button>
+</form>
+
+<script>
+    function toggleStep(id) {
+        const checkbox = document.getElementById('check-' + id);
+        const card = document.getElementById('card-' + id);
+
+        // если клик был НЕ по input/textarea — переключаем
+        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+            checkbox.checked = !checkbox.checked;
+        }
+
+        // визуальное выделение
+        if (checkbox.checked) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    }
+</script>
+
+</body>
+</html>
